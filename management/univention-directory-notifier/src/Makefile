@@ -31,7 +31,7 @@
 #
 CFLAGS := -Wall -g -D_FILE_OFFSET_BITS=64
 LDADD := -luniventiondebug
-NOTIFIER_LDADD = $(LDADD)
+NOTIFIER_LDADD = $(LDADD) -lldap -llber
 DUMP_LDADD = $(LDADD)
 
 
