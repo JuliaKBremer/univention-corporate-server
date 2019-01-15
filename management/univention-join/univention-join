@@ -249,6 +249,13 @@ run_join_scripts () {
 
 						id="$(</var/lib/univention-directory-listener/notifier_id)"
 						awk -F ' ' '{ if ( $1 <= '$id') print }' "$USERTMP/tlog" >/var/lib/univention-ldap/notify/transaction
+
+						/etc/init.d/slapd stop >>/var/log/univention/join.log 2>&1
+						univention-ssh "$DCPWD" --no-split "${DCACCOUNT}@${DCNAME}" slapcat -b cn=translog |
+							slapadd -b cn=translog &&
+						[ -e /var/lib/univention-ldap/translog/data.mdb ] ||
+							failed_message " FAILED: failed do copy /var/lib/univention-ldap/translog/data.mdb from the dc master. Please try again."
+						/etc/init.d/slapd start >>/var/log/univention/join.log 2>&1
 					fi
 
 					# slave 
